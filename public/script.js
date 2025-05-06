@@ -5,10 +5,10 @@ const visitedCities = new Set();
 const addedCities = [];
 
 function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
-    const minLat = 49.0;
-    const maxLat = 54.9;
-    const minLon = 14.1;
-    const maxLon = 24.2;
+    const minLat = 48.6;
+    const maxLat = 55.2;
+    const minLon = 13.0;
+    const maxLon = 25.5;
 
     const latScale = (lat - minLat) / (maxLat - minLat);
     const lonScale = (lon - minLon) / (maxLon - minLon);
@@ -29,6 +29,7 @@ function addCityDot(cityData) {
     const map = document.getElementById('map');
     const mapWidth = map.offsetWidth;
     const mapHeight = map.offsetHeight;
+
     const lat = parseFloat(cityData.lat);
     const lon = parseFloat(cityData.lon);
     const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
@@ -107,14 +108,12 @@ document.getElementById('clear-game').addEventListener('click', function() {
     totalPopulation = 0;
     visitedCities.clear();
     addedCities.length = 0;
-    document.getElementById('city-dots-container').innerHTML = '';
     document.getElementById('tooltip').style.display = 'none';
     updateStats();
 });
 
 function repositionCityDots() {
     const map = document.getElementById('map');
-    if (!map) return;
     const mapWidth = map.offsetWidth;
     const mapHeight = map.offsetHeight;
 
@@ -134,6 +133,7 @@ function repositionCityDots() {
 
 window.addEventListener('resize', repositionCityDots);
 
+// Motyw jasny/ciemny
 const themeButton = document.getElementById('toggleTheme');
 const body = document.body;
 
@@ -141,10 +141,12 @@ function loadTheme() {
     const theme = localStorage.getItem('theme') || 'light';
     body.classList.toggle('dark', theme === 'dark');
 }
+
 function toggleTheme() {
     body.classList.toggle('dark');
     const newTheme = body.classList.contains('dark') ? 'dark' : 'light';
     localStorage.setItem('theme', newTheme);
 }
+
 themeButton.addEventListener('click', toggleTheme);
 loadTheme();
