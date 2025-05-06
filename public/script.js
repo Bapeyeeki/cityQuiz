@@ -89,22 +89,25 @@ function hideTooltip() {
 
 function updateStats() {
     const percent = ((totalPopulation / totalPolandPopulation) * 100).toFixed(2);
-    let cityText;
 
-    if (cityCount === 0) {
-        cityText = '0 miast';
-    } else if (cityCount === 1) {
-        cityText = '1 miasto';
-    } else if (cityCount >= 2 && cityCount <= 4) {
-        cityText = `${cityCount} miasta`;
-    } else {
-        cityText = `${cityCount} miast`;
+    function getCityWordForm(count) {
+        const lastDigit = count % 10;
+        const lastTwoDigits = count % 100;
+
+        if (count === 1) return 'miasto';
+        if (lastDigit >= 2 && lastDigit <= 4 && !(lastTwoDigits >= 12 && lastTwoDigits <= 14)) {
+            return 'miasta';
+        }
+        return 'miast';
     }
+
+    const cityText = `Nazwałeś ${cityCount} ${getCityWordForm(cityCount)}`;
 
     document.getElementById('city-count').textContent = cityText;
     document.getElementById('total-population').textContent = totalPopulation.toLocaleString();
     document.getElementById('population-percent').textContent = percent;
 }
+
 
 
 document.getElementById('city-input').addEventListener('keydown', function(event) {
