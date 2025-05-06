@@ -2,6 +2,7 @@ let cityCount = 0;
 let totalPopulation = 0;
 const totalPolandPopulation = 38386000;
 const visitedCities = new Set();
+const addedCities = [];
 
 function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
     const minLat = 49.0;
@@ -28,7 +29,6 @@ function addCityDot(cityData) {
     const map = document.getElementById('map');
     const mapWidth = map.offsetWidth;
     const mapHeight = map.offsetHeight;
-    console.log(mapWidth, mapHeight);
     const lat = parseFloat(cityData.lat);
     const lon = parseFloat(cityData.lon);
     const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
@@ -53,6 +53,7 @@ function addCityDot(cityData) {
     cityCount++;
     totalPopulation += cityData.populacja;
     visitedCities.add(city);
+    addedCities.push(cityData);
     updateStats();
 }
 
@@ -105,12 +106,33 @@ document.getElementById('clear-game').addEventListener('click', function() {
     cityCount = 0;
     totalPopulation = 0;
     visitedCities.clear();
+    addedCities.length = 0;
     document.getElementById('city-dots-container').innerHTML = '';
     document.getElementById('tooltip').style.display = 'none';
     updateStats();
 });
 
+function repositionCityDots() {
+    const map = document.getElementById('map');
+    if (!map) return;
+    const mapWidth = map.offsetWidth;
+    const mapHeight = map.offsetHeight;
 
+    document.querySelectorAll('.city-dot').forEach(dot => {
+        const cityData = addedCities.find(c => c.nazwa === dot.dataset.name);
+        if (!cityData) return;
+
+        const lat = parseFloat(cityData.lat);
+        const lon = parseFloat(cityData.lon);
+        const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
+
+        const dotSize = parseFloat(dot.style.width);
+        dot.style.left = `${x - dotSize / 2}px`;
+        dot.style.top = `${y - dotSize / 2}px`;
+    });
+}
+
+window.addEventListener('resize', repositionCityDots);
 
 const themeButton = document.getElementById('toggleTheme');
 const body = document.body;
@@ -118,13 +140,11 @@ const body = document.body;
 function loadTheme() {
     const theme = localStorage.getItem('theme') || 'light';
     body.classList.toggle('dark', theme === 'dark');
-  }
-  
-  function toggleTheme() {
+}
+function toggleTheme() {
     body.classList.toggle('dark');
     const newTheme = body.classList.contains('dark') ? 'dark' : 'light';
     localStorage.setItem('theme', newTheme);
-  }
-  
-  themeButton.addEventListener('click', toggleTheme);
-  loadTheme();
+}
+themeButton.addEventListener('click', toggleTheme);
+loadTheme();
