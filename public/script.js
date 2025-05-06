@@ -29,8 +29,8 @@ function addCityDot(cityData) {
     const mapWidth = map.offsetWidth;
     const mapHeight = map.offsetHeight;
 
-    const lat = parseFloat(cityData.szerokosc_geograficzna);
-    const lon = parseFloat(cityData.dlugosc_geograficzna);
+    const lat = parseFloat(cityData.lat);
+    const lon = parseFloat(cityData.lon);
     const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
 
     const cityDot = document.createElement('div');
