@@ -82,14 +82,11 @@ svg {
     z-index: 1;
 }
 
-<<<<<<< HEAD
 .city-dot:hover {
     opacity: 1;
     z-index: 5;
 }
 
-=======
->>>>>>> a26beebac6f73d0bad3d522df21e3e4125230be8
 #toggleTheme {
     position: fixed;
     top: 10px; 
