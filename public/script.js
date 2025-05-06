@@ -126,9 +126,16 @@ document.getElementById('clear-game').addEventListener('click', function() {
     totalPopulation = 0;
     visitedCities.clear();
     addedCities.length = 0;
+
+    const cityDotsContainer = document.getElementById('city-dots-container');
+    
+    const cityDots = cityDotsContainer.querySelectorAll('.city-dot');
+    cityDots.forEach(dot => dot.remove());
+    
     document.getElementById('tooltip').style.display = 'none';
+
     updateStats();
-});
+}); 
 
 function repositionCityDots() {
     const map = document.getElementById('map');
