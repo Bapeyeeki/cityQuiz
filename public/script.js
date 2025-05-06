@@ -5,16 +5,34 @@ const visitedCities = new Set();
 const addedCities = [];
 
 function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
-    const minLat = 48.6;
-    const maxLat = 55.2;
-    const minLon = 13.0;
-    const maxLon = 25.5;
+    const minLat = 49.0;
+    const maxLat = 54.9;
+    const minLon = 14.1;
+    const maxLon = 24.2;
 
+    // Oblicz skalę
     const latScale = (lat - minLat) / (maxLat - minLat);
     const lonScale = (lon - minLon) / (maxLon - minLon);
 
-    const x = lonScale * mapWidth;
-    const y = (1 - latScale) * mapHeight;
+    // Proporcje mapy SVG: 1000x700 => 10:7
+    const expectedAspect = 10 / 7;
+    const actualAspect = mapWidth / mapHeight;
+
+    let x, y, offsetX = 0, offsetY = 0;
+
+    if (actualAspect > expectedAspect) {
+        // Mapa jest zbyt szeroka – dodaj marginesy poziome
+        const adjustedWidth = mapHeight * expectedAspect;
+        offsetX = (mapWidth - adjustedWidth) / 2;
+        x = lonScale * adjustedWidth + offsetX;
+        y = (1 - latScale) * mapHeight;
+    } else {
+        // Mapa jest zbyt wysoka – dodaj marginesy pionowe
+        const adjustedHeight = mapWidth / expectedAspect;
+        offsetY = (mapHeight - adjustedHeight) / 2;
+        x = lonScale * mapWidth;
+        y = (1 - latScale) * adjustedHeight + offsetY;
+    }
 
     return { x, y };
 }
@@ -133,7 +151,7 @@ function repositionCityDots() {
 
 window.addEventListener('resize', repositionCityDots);
 
-// Motyw jasny/ciemny
+// Motyw
 const themeButton = document.getElementById('toggleTheme');
 const body = document.body;
 
