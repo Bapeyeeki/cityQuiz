@@ -7,7 +7,7 @@ $conn = $database->getConnection();
 
 $cityName = isset($_GET['city']) ? trim($_GET['city']) : null;
 if ($cityName) {
-    $stmt = $conn->prepare("SELECT nazwa, populacja, szerokosc_geograficzna, dlugosc_geograficzna FROM miasta WHERE LOWER(nazwa) = LOWER(:city) LIMIT 1");
+    $stmt = $conn->prepare("SELECT nazwa, populacja, lat, lon FROM miasta WHERE LOWER(nazwa) = LOWER(:city) LIMIT 1");
     $stmt->bindParam(':city', $cityName);
     $stmt->execute();
 
