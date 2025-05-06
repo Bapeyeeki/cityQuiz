@@ -18,6 +18,14 @@ h1 {
     background-color: white;
     overflow: hidden;
 }
+.city-dots-container{
+    width: 80%;
+    height: 80px;
+}
+.map{
+    width: 80%;
+    height: 80px;
+}
 svg {
     width: 100%;
     height: auto;

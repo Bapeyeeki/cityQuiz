@@ -15,8 +15,9 @@
 <input id="city-input" type="text" class="city-input" placeholder="Podaj nazwę miasta..." autocomplete="off" spellcheck="false" enterkeyhint="done">
 
 <div class="map-container">
+    <div id="city-dots-container">
     <img src="POL_location_map.svg" alt="Mapa Polski" id="map">
-    <div id="city-dots-container"></div> 
+    </div> 
     <div id="tooltip" class="tooltip"></div>
 </div>
 
