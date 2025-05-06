@@ -101,7 +101,7 @@ function updateStats() {
         return 'miast';
     }
 
-    const cityText = `Nazwałeś ${cityCount} ${getCityWordForm(cityCount)}`;
+    const cityText = ` ${cityCount} ${getCityWordForm(cityCount)}`;
 
     document.getElementById('city-count').textContent = cityText;
     document.getElementById('total-population').textContent = totalPopulation.toLocaleString();
