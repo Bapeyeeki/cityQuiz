@@ -131,7 +131,7 @@ document.getElementById('city-input').addEventListener('keydown', function(event
                     addCityDot(data);
                 }
             })
-            .catch(() => alert("xxxxxxxx."));
+            .catch(() => alert("Błąd połączenia z serwerem"));
         
         event.target.value = '';
     }
@@ -191,6 +191,8 @@ function repositionCityDots() {
         dot.style.top = `${y - dotSize / 2}px`;
     });
 }
+
+
 
 window.addEventListener('resize', repositionCityDots);
 
