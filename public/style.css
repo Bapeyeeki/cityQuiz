@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #fff;
+    background-color: #f4f4f4;
     text-align: center;
 }
 h1 {
@@ -59,4 +59,40 @@ s.city-dot {
     background-color: red;
     border-radius: 50%;
     pointer-events: none;
+}
+#toggleTheme {
+    position: fixed;
+    top: 10px; 
+    right: 10px; 
+    padding: 8px 16px; 
+    background-color: #2c2c2c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 1000;
+}
+body.dark #toggleTheme {
+    background-color: #f4f4f4;
+    color: #2c2c2c; 
+}
+body.dark {
+    background-color: #2c2c2c;
+    color: #ecf0f1;
+}
+
+body.dark h1 {
+    color: #ecf0f1;
+}
+
+body.dark .map-container {
+    background-color: #2c2c2c;
+    border: 1px solid #ecf0f1;
+}
+
+body.dark .city-input {
+    background-color: #2c2c2c;
+    border: 1px solid #ecf0f1;
+    color: #ecf0f1;
 }

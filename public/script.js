@@ -1,10 +1,3 @@
-const citiesData = {
-    "warszawa": { population: 1790658, lat: 52.2298, lon: 21.0118 },
-    "kraków": { population: 779115, lat: 50.0647, lon: 19.9450 },
-    "wrocław": { population: 640648, lat: 51.1079, lon: 17.0385 },
-    "gdańsk": { population: 470907, lat: 54.3520, lon: 18.6466 },
-};
-
 let cityCount = 0;
 let totalPopulation = 0;
 const totalPolandPopulation = 38386000;
@@ -22,54 +15,88 @@ function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
     const x = lonScale * mapWidth;
     const y = (1 - latScale) * mapHeight;
 
-    return { x: x, y: y };
+    return { x, y };
 }
 
-function addCityDot(city) {
+function addCityDot(cityData) {
+    const city = cityData.nazwa.toLowerCase();
     if (visitedCities.has(city)) {
-        alert(`Miasto "${city.charAt(0).toUpperCase() + city.slice(1)}" zostało już wpisane!`);
+        alert(`Miasto "${city}" zostało już dodane!`);
         return;
     }
 
+    const map = document.getElementById('map');
+    const mapWidth = map.offsetWidth;
+    const mapHeight = map.offsetHeight;
+
+    const lat = parseFloat(cityData.szerokosc_geograficzna);
+    const lon = parseFloat(cityData.dlugosc_geograficzna);
+    const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
+
     const cityDot = document.createElement('div');
     cityDot.classList.add('city-dot');
-    const cityInfo = citiesData[city];
-    
-    const mapWidth = document.getElementById('map').offsetWidth;
-    const mapHeight = document.getElementById('map').offsetHeight;
 
-    const { x, y } = geoToMapCoords(cityInfo.lat, cityInfo.lon, mapWidth, mapHeight);
-
-    cityDot.style.position = 'absolute';
-    cityDot.style.left = `${x - cityDot.offsetWidth / 2}px`;
-    cityDot.style.top = `${y - cityDot.offsetHeight / 2}px`;
-
-    const dotSize = Math.max(8, Math.min(20, cityInfo.population / 50000));
+    const dotSize = Math.max(10, Math.min(24, cityData.populacja / 40000));
     cityDot.style.width = `${dotSize}px`;
     cityDot.style.height = `${dotSize}px`;
-    cityDot.style.backgroundColor = 'red';
-    cityDot.style.borderRadius = '50%';
+    cityDot.style.left = `${x - dotSize / 2}px`;
+    cityDot.style.top = `${y - dotSize / 2}px`;
+
+    cityDot.dataset.name = cityData.nazwa;
+    cityDot.dataset.population = cityData.populacja;
+
+    cityDot.addEventListener('mouseenter', showTooltip);
+    cityDot.addEventListener('mouseleave', hideTooltip);
 
     document.getElementById('city-dots-container').appendChild(cityDot);
 
     cityCount++;
-    totalPopulation += cityInfo.population;
+    totalPopulation += cityData.populacja;
     visitedCities.add(city);
     updateStats();
 }
 
-function updateStats() {
-    const populationPercentage = ((totalPopulation / totalPolandPopulation) * 100).toFixed(2);
-    document.getElementById('city-count').textContent = `${cityCount} miast`;
-    document.getElementById('total-population').textContent = totalPopulation.toLocaleString();
-    document.getElementById('population-percent').textContent = populationPercentage;
+function showTooltip(e) {
+    const tooltip = document.getElementById('tooltip');
+    const cityName = e.target.dataset.name;
+    const population = parseInt(e.target.dataset.population).toLocaleString();
+
+    tooltip.textContent = `${cityName} – ${population} mieszkańców`;
+    tooltip.style.left = `${e.pageX + 10}px`;
+    tooltip.style.top = `${e.pageY - 20}px`;
+    tooltip.style.display = 'block';
 }
 
-document.getElementById('city-input').addEventListener('input', function(event) {
-    const cityInput = event.target.value.trim().toLowerCase();
+function hideTooltip() {
+    document.getElementById('tooltip').style.display = 'none';
+}
 
-    if (citiesData[cityInput]) {
-        addCityDot(cityInput);
+function updateStats() {
+    const percent = ((totalPopulation / totalPolandPopulation) * 100).toFixed(2);
+    document.getElementById('city-count').textContent = `${cityCount} miast`;
+    document.getElementById('total-population').textContent = totalPopulation.toLocaleString();
+    document.getElementById('population-percent').textContent = percent;
+}
+
+document.getElementById('city-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        const city = event.target.value.trim().toLowerCase();
+        if (!city) {
+            alert('Wprowadź nazwę miasta');
+            return;
+        }
+
+        fetch(`getCity.php?city=${encodeURIComponent(city)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(`Błąd: ${data.error}`);
+                } else {
+                    addCityDot(data);
+                }
+            })
+            .catch(() => alert("Błąd połączenia z serwerem."));
+        
         event.target.value = '';
     }
 });
@@ -79,5 +106,25 @@ document.getElementById('clear-game').addEventListener('click', function() {
     totalPopulation = 0;
     visitedCities.clear();
     document.getElementById('city-dots-container').innerHTML = '';
+    document.getElementById('tooltip').style.display = 'none';
     updateStats();
 });
+
+
+
+const themeButton = document.getElementById('toggleTheme');
+const body = document.body;
+
+function loadTheme() {
+    const theme = localStorage.getItem('theme') || 'light';
+    body.classList.toggle('dark', theme === 'dark');
+  }
+  
+  function toggleTheme() {
+    body.classList.toggle('dark');
+    const newTheme = body.classList.contains('dark') ? 'dark' : 'light';
+    localStorage.setItem('theme', newTheme);
+  }
+  
+  themeButton.addEventListener('click', toggleTheme);
+  loadTheme();

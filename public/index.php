@@ -8,6 +8,8 @@
 </head>
 <body>
 
+<buttton id="toggleTheme">Zmień tryb</buttton>
+
 <h1>Jak dużo Polskich miast potrafisz nazwać?</h1>
 
 <input id="city-input" type="text" class="city-input" placeholder="Podaj nazwę miasta..." autocomplete="off" spellcheck="false" enterkeyhint="done">
