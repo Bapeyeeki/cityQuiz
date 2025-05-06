@@ -18,13 +18,13 @@ h1 {
     background-color: white;
     overflow: hidden;
 }
-.city-dots-container{
-    width: 80%;
-    height: 80px;
+#city-dots-container{
+    width: 100%;
+    height: 67vh;
 }
-.map{
-    width: 80%;
-    height: 80px;
+#map{
+    width: 100%;
+    height: 67vh;
 }
 svg {
     width: 100%;
