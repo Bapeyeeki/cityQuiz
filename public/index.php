@@ -26,6 +26,7 @@
         Nazwałeś <span id="city-count" class="stat">0 miast</span> z łączną populacją <span id="total-population" class="stat">0</span> (<span id="population-percent" class="stat">0.00</span>% mieszkańców Polski).
     </p>
     <button id="clear-game" class="error">Clear</button>
+    <button id="finish-game" class="success">Zakończ i zapisz</button>
 </div>
 
 <script src="script.js"></script>

@@ -55,6 +55,7 @@ svg {
 .region {
     transition: all 0.3s ease;
 }
+
 .city-input {
     width: 300px;
     padding: 10px;
@@ -75,6 +76,7 @@ svg {
     border-radius: 50%;
     pointer-events: none;
 }
+
 #toggleTheme {
     position: fixed;
     top: 10px; 
@@ -88,6 +90,39 @@ svg {
     cursor: pointer;
     z-index: 1000;
 }
+
+button.success {
+    background-color: darkblue;
+    color: white;
+    padding: 10px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.success:hover {
+    background-color: #0c0b5a;
+}
+
+button.error {
+    background-color: #b51c0c;
+    color: white;
+    padding: 10px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.error:hover {
+    background-color: #701107;
+}
+
 body.dark #toggleTheme {
     background-color: #f4f4f4;
     color: #2c2c2c; 
