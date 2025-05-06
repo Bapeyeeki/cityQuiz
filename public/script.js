@@ -152,6 +152,27 @@ document.getElementById('clear-game').addEventListener('click', function() {
     updateStats();
 });
 
+document.getElementById('finish-game').addEventListener('click', () => {
+    if (addedCities.length === 0) {
+        alert('Nie dodano żadnych miast!');
+        return;
+    }
+
+    const sorted = [...addedCities].sort((a, b) => b.populatio - a.populatio); // Sortowanie po populacji
+    const largest = sorted[0];  // Największe miasto
+    const smallest = sorted[sorted.length - 1];  // Najmniejsze miasto
+
+    const largestPopulation = typeof largest.populatio === 'number' ? largest.populatio.toLocaleString() : 'Nieznana';
+    const smallestPopulation = typeof smallest.populatio === 'number' ? smallest.populatio.toLocaleString() : 'Nieznana';
+
+    const message = `
+        Największe miasto: ${largest.city} (${largestPopulation} mieszkańców)
+        Najmniejsze miasto: ${smallest.city} (${smallestPopulation} mieszkańców)
+    `;
+
+    alert(message);
+});
+
 function repositionCityDots() {
     const map = document.getElementById('map');
     const mapWidth = map.offsetWidth;
