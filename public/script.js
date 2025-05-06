@@ -10,24 +10,20 @@ function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
     const minLon = 14.1;
     const maxLon = 24.2;
 
-    // Oblicz skalę
     const latScale = (lat - minLat) / (maxLat - minLat);
     const lonScale = (lon - minLon) / (maxLon - minLon);
 
-    // Proporcje mapy SVG: 1000x700 => 10:7
     const expectedAspect = 10 / 7;
     const actualAspect = mapWidth / mapHeight;
 
     let x, y, offsetX = 0, offsetY = 0;
 
     if (actualAspect > expectedAspect) {
-        // Mapa jest zbyt szeroka – dodaj marginesy poziome
         const adjustedWidth = mapHeight * expectedAspect;
         offsetX = (mapWidth - adjustedWidth) / 2;
         x = lonScale * adjustedWidth + offsetX;
         y = (1 - latScale) * mapHeight;
     } else {
-        // Mapa jest zbyt wysoka – dodaj marginesy pionowe
         const adjustedHeight = mapWidth / expectedAspect;
         offsetY = (mapHeight - adjustedHeight) / 2;
         x = lonScale * mapWidth;
@@ -38,7 +34,7 @@ function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
 }
 
 function addCityDot(cityData) {
-    const city = cityData.nazwa.toLowerCase();
+    const city = cityData.city.toLowerCase();
     if (visitedCities.has(city)) {
         alert(`Miasto "${city}" zostało już dodane!`);
         return;
@@ -49,20 +45,20 @@ function addCityDot(cityData) {
     const mapHeight = map.offsetHeight;
 
     const lat = parseFloat(cityData.lat);
-    const lon = parseFloat(cityData.lon);
+    const lon = parseFloat(cityData.lng);
     const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
 
     const cityDot = document.createElement('div');
     cityDot.classList.add('city-dot');
 
-    const dotSize = Math.max(10, Math.min(24, cityData.populacja / 40000));
+    const dotSize = Math.max(10, Math.min(24, cityData.populatio / 40000));
     cityDot.style.width = `${dotSize}px`;
     cityDot.style.height = `${dotSize}px`;
     cityDot.style.left = `${x - dotSize / 2}px`;
     cityDot.style.top = `${y - dotSize / 2}px`;
 
-    cityDot.dataset.name = cityData.nazwa;
-    cityDot.dataset.population = cityData.populacja;
+    cityDot.dataset.name = cityData.city;
+    cityDot.dataset.population = cityData.populatio;
 
     cityDot.addEventListener('mouseenter', showTooltip);
     cityDot.addEventListener('mouseleave', hideTooltip);
@@ -70,7 +66,7 @@ function addCityDot(cityData) {
     document.getElementById('city-dots-container').appendChild(cityDot);
 
     cityCount++;
-    totalPopulation += cityData.populacja;
+    totalPopulation += cityData.populatio;
     visitedCities.add(city);
     addedCities.push(cityData);
     updateStats();
@@ -115,7 +111,7 @@ document.getElementById('city-input').addEventListener('keydown', function(event
                     addCityDot(data);
                 }
             })
-            .catch(() => alert("Błąd połączenia z serwerem."));
+            .catch(() => alert("xxxxxxxx."));
         
         event.target.value = '';
     }
@@ -128,14 +124,13 @@ document.getElementById('clear-game').addEventListener('click', function() {
     addedCities.length = 0;
 
     const cityDotsContainer = document.getElementById('city-dots-container');
-    
     const cityDots = cityDotsContainer.querySelectorAll('.city-dot');
     cityDots.forEach(dot => dot.remove());
-    
+
     document.getElementById('tooltip').style.display = 'none';
 
     updateStats();
-}); 
+});
 
 function repositionCityDots() {
     const map = document.getElementById('map');
@@ -143,11 +138,11 @@ function repositionCityDots() {
     const mapHeight = map.offsetHeight;
 
     document.querySelectorAll('.city-dot').forEach(dot => {
-        const cityData = addedCities.find(c => c.nazwa === dot.dataset.name);
+        const cityData = addedCities.find(c => c.city === dot.dataset.name);
         if (!cityData) return;
 
         const lat = parseFloat(cityData.lat);
-        const lon = parseFloat(cityData.lon);
+        const lon = parseFloat(cityData.lng);
         const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
 
         const dotSize = parseFloat(dot.style.width);
