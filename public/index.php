@@ -18,9 +18,8 @@
     <div id="city-dots-container">
     <img src="POL_location_map.svg" alt="Mapa Polski" id="map">
     </div> 
-    <div id="tooltip" class="tooltip"></div>
 </div>
-
+<div id="tooltip" class="tooltip"></div>
 <div class="stats">
     <p class="text-center">
         Nazwałeś <span id="city-count" class="stat">0 miast</span> z łączną populacją <span id="total-population" class="stat">0</span> (<span id="population-percent" class="stat">0.00</span>% mieszkańców Polski).

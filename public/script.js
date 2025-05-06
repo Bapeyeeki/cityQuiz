@@ -70,6 +70,9 @@ function addCityDot(cityData) {
     visitedCities.add(city);
     addedCities.push(cityData);
     updateStats();
+
+    cityDot.addEventListener('mouseenter', showTooltip);
+    cityDot.addEventListener('mouseleave', hideTooltip);
 }
 
 function showTooltip(e) {
@@ -79,13 +82,14 @@ function showTooltip(e) {
 
     tooltip.textContent = `${cityName} – ${population} mieszkańców`;
     tooltip.style.left = `${e.pageX + 10}px`;
-    tooltip.style.top = `${e.pageY - 20}px`;
+    tooltip.style.top = `${e.pageY - 30}px`;
     tooltip.style.display = 'block';
 }
 
 function hideTooltip() {
     document.getElementById('tooltip').style.display = 'none';
 }
+
 
 function updateStats() {
     const percent = ((totalPopulation / totalPolandPopulation) * 100).toFixed(2);
@@ -185,4 +189,4 @@ function toggleTheme() {
 }
 
 themeButton.addEventListener('click', toggleTheme);
-loadTheme(); ///teeteetetetet
+loadTheme(); ///teeteetetetet 
