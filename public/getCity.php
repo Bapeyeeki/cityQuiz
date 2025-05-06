@@ -8,7 +8,7 @@ $conn = $database->getConnection();
 $cityName = isset($_GET['city']) ? trim($_GET['city']) : null;
 if ($cityName) {
     // Zmiana zapytania SQL pod nową tabelę i kolumny
-    $stmt = $conn->prepare("SELECT city, lat, lng, population FROM cities WHERE LOWER(city) = LOWER(:city) LIMIT 1");
+    $stmt = $conn->prepare("SELECT city, lat, lng, populatio FROM cities WHERE LOWER(city) = LOWER(:city) LIMIT 1");
     $stmt->bindParam(':city', $cityName);
     $stmt->execute();
 
