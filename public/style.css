@@ -54,7 +54,7 @@ svg {
     border-color: #3498db;
 }
 
-s.city-dot {
+.city-dot {
     position: absolute;
     background-color: red;
     border-radius: 50%;
