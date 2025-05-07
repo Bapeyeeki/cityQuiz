@@ -28,7 +28,7 @@
     <button id="finish-game" class="success">Zakończ i zapisz</button>
 </div>
 
-<div id="end-screen" style="display:none; position:fixed; inset:0; background:#f4f4f4; z-index:9999; overflow:auto; padding:40px;">
+<div id="end-screen">
     <h2>Miasta, których nie odgadłeś:</h2>
     <ul id="missed-cities" style="max-height:70vh; overflow-y:auto; list-style:none; padding:0; font-size:16px;"></ul>
     <button onclick="location.reload()">Zagraj ponownie</button>
