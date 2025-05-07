@@ -1,9 +1,11 @@
+// Inicjalizacja zmiennych globalnych
 let cityCount = 0;
 let totalPopulation = 0;
 const totalPolandPopulation = 38386000;
 const visitedCities = new Set();
 const addedCities = [];
 
+// Funkcja konwertująca współrzędne geograficzne na współrzędne mapy
 function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
     const minLat = 49.0;
     const maxLat = 54.9;
@@ -18,6 +20,7 @@ function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
 
     let x, y, offsetX = 0, offsetY = 0;
 
+    // Dopasowanie współrzędnych do proporcji mapy
     if (actualAspect > expectedAspect) {
         const adjustedWidth = mapHeight * expectedAspect;
         offsetX = (mapWidth - adjustedWidth) / 2;
@@ -33,10 +36,12 @@ function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
     return { x, y };
 }
 
+// Funkcja dodająca punkt (miasto) na mapie
 function addCityDot(cityData) {
     const originalCity = cityData.city;
     const cityLower = originalCity.toLowerCase();
 
+    // Sprawdzanie, czy miasto zostało już dodane
     if (visitedCities.has(cityLower)) {
         alert(`Miasto "${originalCity}" zostało już dodane!`);
         return;
@@ -66,11 +71,11 @@ function addCityDot(cityData) {
     cityDot.dataset.name = originalCity;
     cityDot.dataset.population = cityData.populatio;
 
-    // Obsługa tooltipa
+    // Obsługa tooltipa (pokazywanie i ukrywanie)
     cityDot.addEventListener('mouseenter', showTooltip);
     cityDot.addEventListener('mouseleave', hideTooltip);
 
-    // Dodajemy do mapy
+    // Dodajemy punkt na mapie
     document.getElementById('city-dots-container').appendChild(cityDot);
 
     // Aktualizacja danych
@@ -82,6 +87,7 @@ function addCityDot(cityData) {
     updateStats();
 }
 
+// Funkcja pokazująca tooltip z nazwą miasta i liczbą mieszkańców
 function showTooltip(e) {
     const tooltip = document.getElementById('tooltip');
     const cityName = e.target.dataset.name;
@@ -93,13 +99,16 @@ function showTooltip(e) {
     tooltip.style.display = 'block';
 }
 
+// Funkcja ukrywająca tooltip
 function hideTooltip() {
     document.getElementById('tooltip').style.display = 'none';
 }
 
+// Funkcja aktualizująca dane statystyczne (liczba miast, populacja)
 function updateStats() {
     const percent = ((totalPopulation / totalPolandPopulation) * 100).toFixed(2);
 
+    // Funkcja zwracająca odpowiednią formę słowa "miasto"
     function getCityWordForm(count) {
         const lastDigit = count % 10;
         const lastTwoDigits = count % 100;
@@ -113,11 +122,13 @@ function updateStats() {
 
     const cityText = ` ${cityCount} ${getCityWordForm(cityCount)}`;
 
+    // Aktualizacja liczby miast i populacji
     document.getElementById('city-count').textContent = cityText;
     document.getElementById('total-population').textContent = totalPopulation.toLocaleString();
     document.getElementById('population-percent').textContent = percent;
 }
 
+// Obsługa dodawania miast po naciśnięciu Enter w polu tekstowym
 document.getElementById('city-input').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         const city = event.target.value.trim().toLowerCase();
@@ -141,6 +152,7 @@ document.getElementById('city-input').addEventListener('keydown', function(event
     }
 });
 
+// Funkcja czyszcząca grę
 function clearGame() {
     cityCount = 0;
     totalPopulation = 0;
@@ -156,8 +168,10 @@ function clearGame() {
     updateStats();
 }
 
+// Przycisk czyszczący grę
 document.getElementById('clear-game').addEventListener('click', clearGame);
 
+// Funkcja do kończenia gry i wyświetlania wyników
 document.getElementById('finish-game').addEventListener('click', () => {
     if (addedCities.length === 0) {
         alert('Nie dodano żadnych miast!');
@@ -176,6 +190,7 @@ Największe miasto: ${largest.city} (${largestPopulation} mieszkańców)
 Najmniejsze miasto: ${smallest.city} (${smallestPopulation} mieszkańców)
     `;
 
+    // Pobieranie danych o wszystkich miastach z serwera
     fetch('getCity.php?all=true')
         .then(response => response.json())
         .then(allCities => {
@@ -197,6 +212,7 @@ Najmniejsze miasto: ${smallest.city} (${smallestPopulation} mieszkańców)
         .catch(() => alert("Błąd podczas ładowania danych z serwera."));
 });
 
+// Funkcja do ponownego ustawiania punktów miast po zmianie rozmiaru okna
 function repositionCityDots() {
     const map = document.getElementById('map');
     const mapWidth = map.offsetWidth;
@@ -214,22 +230,26 @@ function repositionCityDots() {
     });
 }
 
+// Nasłuchiwacz zmiany rozmiaru okna
 window.addEventListener('resize', repositionCityDots);
 
 // Tryb ciemny
 const themeButton = document.getElementById('toggleTheme');
 const body = document.body;
 
+// Funkcja ładująca aktualny motyw (ciemny lub jasny)
 function loadTheme() {
     const theme = localStorage.getItem('theme') || 'light';
     body.classList.toggle('dark', theme === 'dark');
 }
 
+// Funkcja przełączająca tryb ciemny
 function toggleTheme() {
     body.classList.toggle('dark');
     const newTheme = body.classList.contains('dark') ? 'dark' : 'light';
     localStorage.setItem('theme', newTheme);
 }
 
+// Przycisk zmieniający motyw
 themeButton.addEventListener('click', toggleTheme);
 loadTheme();
