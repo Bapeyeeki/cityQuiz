@@ -40,7 +40,7 @@ svg {
 }
 #tooltip {
     position: absolute;
-    z-index: 9999; /* Dużo wyżej niż kropki */
+    z-index: 9999;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 5px 10px;
@@ -75,7 +75,7 @@ svg {
     position: absolute;
     background-color: red;
     border-radius: 50%;
-    pointer-events: auto; /* zmienione z none, żeby działał hover */
+    pointer-events: auto;
     opacity: 0.6;
     transition: opacity 0.2s ease;
     z-index: 1;
@@ -112,11 +112,6 @@ button.success {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-
-button.success:hover {
-    background-color: #0c0b5a;
-}
-
 button.error {
     background-color: #b51c0c;
     color: white;
@@ -179,15 +174,6 @@ body.dark #end-screen {
 body.dark #end-screen button {
     background-color: #f39c12;
     color: #2c2c2c;
-}
-
-body.dark #end-screen button:hover {
-    background-color: #e67e22;
-}
-
-body.dark #end-screen button {
-    background-color: #f39c12;
-    color: #2c2c2c;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -203,6 +189,3 @@ body.dark #end-screen button {
     cursor: pointer;
 }
 
-#end-screen button:hover {
-    background-color: #2980b9;
-}
