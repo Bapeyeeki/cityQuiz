@@ -34,9 +34,11 @@ function geoToMapCoords(lat, lon, mapWidth, mapHeight) {
 }
 
 function addCityDot(cityData) {
-    const city = cityData.city.toLowerCase();
-    if (visitedCities.has(city)) {
-        alert(`Miasto "${city}" zostało już dodane!`);
+    const originalCity = cityData.city;
+    const cityLower = originalCity.toLowerCase();
+
+    if (visitedCities.has(cityLower)) {
+        alert(`Miasto "${originalCity}" zostało już dodane!`);
         return;
     }
 
@@ -57,7 +59,7 @@ function addCityDot(cityData) {
     cityDot.style.left = `${x - dotSize / 2}px`;
     cityDot.style.top = `${y - dotSize / 2}px`;
 
-    cityDot.dataset.name = cityData.city;
+    cityDot.dataset.name = originalCity;
     cityDot.dataset.population = cityData.populatio;
 
     cityDot.addEventListener('mouseenter', showTooltip);
@@ -67,12 +69,10 @@ function addCityDot(cityData) {
 
     cityCount++;
     totalPopulation += cityData.populatio;
-    visitedCities.add(city);
-    addedCities.push(cityData);
-    updateStats();
+    visitedCities.add(cityLower);
+    addedCities.push({ ...cityData, cityLower });
 
-    cityDot.addEventListener('mouseenter', showTooltip);
-    cityDot.addEventListener('mouseleave', hideTooltip);
+    updateStats();
 }
 
 function showTooltip(e) {
@@ -89,7 +89,6 @@ function showTooltip(e) {
 function hideTooltip() {
     document.getElementById('tooltip').style.display = 'none';
 }
-
 
 function updateStats() {
     const percent = ((totalPopulation / totalPolandPopulation) * 100).toFixed(2);
@@ -112,8 +111,6 @@ function updateStats() {
     document.getElementById('population-percent').textContent = percent;
 }
 
-
-
 document.getElementById('city-input').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         const city = event.target.value.trim().toLowerCase();
@@ -132,12 +129,13 @@ document.getElementById('city-input').addEventListener('keydown', function(event
                 }
             })
             .catch(() => alert("Błąd połączenia z serwerem"));
-        
+
         event.target.value = '';
     }
 });
 
-document.getElementById('clear-game').addEventListener('click', function() {
+function clearGame() {
+    console.log("WYCZYSZCZONO GRĘ");
     cityCount = 0;
     totalPopulation = 0;
     visitedCities.clear();
@@ -150,17 +148,21 @@ document.getElementById('clear-game').addEventListener('click', function() {
     document.getElementById('tooltip').style.display = 'none';
 
     updateStats();
-});
+}
+
+document.getElementById('clear-game').addEventListener('click', clearGame);
 
 document.getElementById('finish-game').addEventListener('click', () => {
+    console.log("Kliknięto 'Zakończ i zapisz'");
+
     if (addedCities.length === 0) {
         alert('Nie dodano żadnych miast!');
         return;
     }
 
-    const sorted = [...addedCities].sort((a, b) => b.populatio - a.populatio); // Sortowanie po populacji
-    const largest = sorted[0];  // Największe miasto
-    const smallest = sorted[sorted.length - 1];  // Najmniejsze miasto
+    const sorted = [...addedCities].sort((a, b) => b.populatio - a.populatio);
+    const largest = sorted[0];
+    const smallest = sorted[sorted.length - 1];
 
     const largestPopulation = typeof largest.populatio === 'number' ? largest.populatio.toLocaleString() : 'Nieznana';
     const smallestPopulation = typeof smallest.populatio === 'number' ? smallest.populatio.toLocaleString() : 'Nieznana';
@@ -170,7 +172,9 @@ document.getElementById('finish-game').addEventListener('click', () => {
         Najmniejsze miasto: ${smallest.city} (${smallestPopulation} mieszkańców)
     `;
 
-    alert(message);
+    if (confirm(message + "\nCzy chcesz wyczyścić grę?")) {
+        clearGame();
+    }
 });
 
 function repositionCityDots() {
@@ -179,7 +183,8 @@ function repositionCityDots() {
     const mapHeight = map.offsetHeight;
 
     document.querySelectorAll('.city-dot').forEach(dot => {
-        const cityData = addedCities.find(c => c.city === dot.dataset.name);
+        const dotCity = dot.dataset.name.toLowerCase();
+        const cityData = addedCities.find(c => c.cityLower === dotCity);
         if (!cityData) return;
 
         const lat = parseFloat(cityData.lat);
@@ -191,8 +196,6 @@ function repositionCityDots() {
         dot.style.top = `${y - dotSize / 2}px`;
     });
 }
-
-
 
 window.addEventListener('resize', repositionCityDots);
 
@@ -212,4 +215,4 @@ function toggleTheme() {
 }
 
 themeButton.addEventListener('click', toggleTheme);
-loadTheme(); ///teeteetetetet 
+loadTheme();
