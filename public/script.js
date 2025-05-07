@@ -135,17 +135,16 @@ document.getElementById('city-input').addEventListener('keydown', function(event
 });
 
 function clearGame() {
-    console.log("WYCZYSZCZONO GRĘ");
     cityCount = 0;
     totalPopulation = 0;
     visitedCities.clear();
     addedCities.length = 0;
 
     const cityDotsContainer = document.getElementById('city-dots-container');
-    const cityDots = cityDotsContainer.querySelectorAll('.city-dot');
-    cityDots.forEach(dot => dot.remove());
+    cityDotsContainer.querySelectorAll('.city-dot').forEach(dot => dot.remove());
 
     document.getElementById('tooltip').style.display = 'none';
+    document.getElementById('end-screen').style.display = 'none';
 
     updateStats();
 }
@@ -153,8 +152,6 @@ function clearGame() {
 document.getElementById('clear-game').addEventListener('click', clearGame);
 
 document.getElementById('finish-game').addEventListener('click', () => {
-    console.log("Kliknięto 'Zakończ i zapisz'");
-
     if (addedCities.length === 0) {
         alert('Nie dodano żadnych miast!');
         return;
@@ -167,14 +164,30 @@ document.getElementById('finish-game').addEventListener('click', () => {
     const largestPopulation = typeof largest.populatio === 'number' ? largest.populatio.toLocaleString() : 'Nieznana';
     const smallestPopulation = typeof smallest.populatio === 'number' ? smallest.populatio.toLocaleString() : 'Nieznana';
 
-    const message = `
-        Największe miasto: ${largest.city} (${largestPopulation} mieszkańców)
-        Najmniejsze miasto: ${smallest.city} (${smallestPopulation} mieszkańców)
+    const summary = `
+Największe miasto: ${largest.city} (${largestPopulation} mieszkańców)
+Najmniejsze miasto: ${smallest.city} (${smallestPopulation} mieszkańców)
     `;
 
-    if (confirm(message + "\nCzy chcesz wyczyścić grę?")) {
-        clearGame();
-    }
+    fetch('getCity.php?all=true')
+        .then(response => response.json())
+        .then(allCities => {
+            const guessedSet = new Set(addedCities.map(c => c.city.toLowerCase()));
+            const missed = allCities.filter(c => !guessedSet.has(c.city.toLowerCase()));
+
+            const list = document.getElementById('missed-cities');
+            list.innerHTML = '';
+
+            missed.forEach(city => {
+                const li = document.createElement('li');
+                li.textContent = `${city.city} (${parseInt(city.populatio).toLocaleString()} mieszkańców)`;
+                list.appendChild(li);
+            });
+
+            alert(summary);
+            document.getElementById('end-screen').style.display = 'block';
+        })
+        .catch(() => alert("Błąd podczas ładowania danych z serwera."));
 });
 
 function repositionCityDots() {
@@ -187,10 +200,7 @@ function repositionCityDots() {
         const cityData = addedCities.find(c => c.cityLower === dotCity);
         if (!cityData) return;
 
-        const lat = parseFloat(cityData.lat);
-        const lon = parseFloat(cityData.lng);
-        const { x, y } = geoToMapCoords(lat, lon, mapWidth, mapHeight);
-
+        const { x, y } = geoToMapCoords(parseFloat(cityData.lat), parseFloat(cityData.lng), mapWidth, mapHeight);
         const dotSize = parseFloat(dot.style.width);
         dot.style.left = `${x - dotSize / 2}px`;
         dot.style.top = `${y - dotSize / 2}px`;
@@ -199,7 +209,7 @@ function repositionCityDots() {
 
 window.addEventListener('resize', repositionCityDots);
 
-// Motyw
+// Tryb ciemny
 const themeButton = document.getElementById('toggleTheme');
 const body = document.body;
 
