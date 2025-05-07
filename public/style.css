@@ -38,18 +38,17 @@ svg {
     height: auto;
     cursor: pointer;
 }
-.tooltip {
+#tooltip {
     position: absolute;
+    z-index: 9999; /* Dużo wyżej niż kropki */
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    display: none;
+    padding: 5px 10px;
+    border-radius: 4px;
     font-size: 14px;
     pointer-events: none;
-    z-index: 100;
+    display: none;
     white-space: nowrap;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 .highlight {
     fill: #f39c12;
@@ -80,6 +79,7 @@ svg {
     opacity: 0.6;
     transition: opacity 0.2s ease;
     z-index: 1;
+    border: 1px solid black;
 }
 
 .city-dot:hover {

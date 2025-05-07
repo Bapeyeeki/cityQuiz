@@ -59,14 +59,21 @@ function addCityDot(cityData) {
     cityDot.style.left = `${x - dotSize / 2}px`;
     cityDot.style.top = `${y - dotSize / 2}px`;
 
+    // Ustawiamy z-index odwrotnie do rozmiaru — mniejsze wyżej
+    cityDot.style.zIndex = `${1000 - Math.round(dotSize)}`;
+
+    // Atrybuty dla tooltipa
     cityDot.dataset.name = originalCity;
     cityDot.dataset.population = cityData.populatio;
 
+    // Obsługa tooltipa
     cityDot.addEventListener('mouseenter', showTooltip);
     cityDot.addEventListener('mouseleave', hideTooltip);
 
+    // Dodajemy do mapy
     document.getElementById('city-dots-container').appendChild(cityDot);
 
+    // Aktualizacja danych
     cityCount++;
     totalPopulation += cityData.populatio;
     visitedCities.add(cityLower);
